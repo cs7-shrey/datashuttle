@@ -104,8 +104,14 @@ class ConfirmAndAwaitTransferPopup(ModalScreen):
             self.query_one("#confirm_button_container").remove()
 
             # Start the data transfer
-            asyncio.create_task(
-                self.handle_transfer_and_update_ui_when_complete()
+            task = asyncio.create_task(
+                self.handle_transfer_and_update_ui_when_complete(),
+                name="transfer_async_task",
+            )
+
+            self.app.add_task_to_app(task.get_name(), task)
+            task.add_done_callback(
+                lambda _: self.app.delete_task_from_app(task.get_name())
             )
 
             self.query_one("#confirm_message_label").update("Transferring...")
@@ -132,6 +138,7 @@ class ConfirmAndAwaitTransferPopup(ModalScreen):
                     border_color="grey",
                 )
             )
+            print("transfer complete")
         else:
             self.app.show_modal_error_dialog(output)
 

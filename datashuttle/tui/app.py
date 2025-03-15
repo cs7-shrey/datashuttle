@@ -4,6 +4,8 @@ import os
 from typing import TYPE_CHECKING, Dict
 
 if TYPE_CHECKING:
+    import asyncio
+
     from datashuttle.tui.interface import Interface
 
 from pathlib import Path
@@ -45,6 +47,8 @@ class TuiApp(App, inherit_bindings=False):  # type: ignore
     BINDINGS = [
         Binding("ctrl+c", "app.quit", "Exit app", priority=True),
     ]
+
+    tasks: Dict = {}
 
     def compose(self) -> ComposeResult:
         yield Container(
@@ -203,6 +207,20 @@ class TuiApp(App, inherit_bindings=False):  # type: ignore
 
         with open(settings_path, "w") as file:
             yaml.dump(global_settings, file, sort_keys=False)
+
+    # Async task storage --------------------------------------------------
+
+    def add_task_to_app(self, name: str, task: asyncio.Task) -> None:
+        TuiApp.tasks[name] = task
+
+    def delete_task_from_app(self, name) -> None:
+        if name in TuiApp.tasks:
+            TuiApp.tasks.pop(name)
+
+    def get_task_by_name(self, name) -> asyncio.Task | None:
+        if name in TuiApp.tasks:
+            return TuiApp.tasks[name]
+        return None
 
 
 def main():

@@ -247,7 +247,8 @@ class TuiBase:
         """
         Close the modal_dialogs.Messagebox
         """
-        pilot.app.screen.on_button_pressed()
+        # pilot.app.screen.on_button_pressed()
+        pilot.app.screen.dismiss()
         await pilot.pause()
 
     async def move_select_to_position(self, pilot, id, position):
