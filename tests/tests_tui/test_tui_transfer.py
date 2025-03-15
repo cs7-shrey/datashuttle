@@ -1,5 +1,3 @@
-import asyncio
-
 import pytest
 import test_utils
 from tui_base import TuiBase
@@ -256,26 +254,22 @@ class TestTuiTransfer(TuiBase):
 
         await self.scroll_to_click_pause(pilot, "#confirm_ok_button")
 
-        running_tasks = asyncio.all_tasks()
-        target_task = next(
-            (
-                t
-                for t in running_tasks
-                if t.get_name() == "transfer_async_task"
-            ),
-            None,
-        )
-        # target_task = pilot.app.get_task_by_name("transfer_async_task")
+        # running_tasks = asyncio.all_tasks()
+        # target_task = next(
+        #     (
+        #         t
+        #         for t in running_tasks
+        #         if t.get_name() == "transfer_async_task"
+        #     ),
+        #     None,
+        # )
+        target_task = pilot.app.get_task_by_name("transfer_async_task")
         print(target_task is None)
         if target_task:
             print(target_task)
             print("waiting for transfer to complete")
             await target_task
             print("wait complete")
-
-        # await pilot.pause(
-        #     10
-        # )  # this is too long / arbitrary, need to find a way to await specific transfer worker
 
         await self.close_messagebox(pilot)
 

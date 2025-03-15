@@ -138,6 +138,7 @@ class ConfirmAndAwaitTransferPopup(ModalScreen):
                     border_color="grey",
                 )
             )
+            print("transfer complete")
         else:
             self.app.show_modal_error_dialog(output)
 
