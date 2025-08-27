@@ -70,7 +70,7 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
         run: |
-          pytest tests/tests_tui/test_tui_create_folders.py
+          for i in {1..10}; do pytest tests/tests_tui/test_tui_create_folders.py; done
 
 
   build_sdist_wheels:
